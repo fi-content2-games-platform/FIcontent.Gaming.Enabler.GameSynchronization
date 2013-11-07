@@ -20,22 +20,20 @@
  */
 
 using UnityEngine;
+using System.Collections.Generic;
 
+/// <summary>
+/// Outputs debug information gathered from the LockStepBehaviours in the scene
+/// </summary>
 public class TestGUI : MonoBehaviour
 {
-
-    public enum TestBehaviour { TestLockStep, TestH2P }
-
-    public TestBehaviour test;
-
-    ITestInfos[] peers;
+    private List<ITestInfos> peers;
 
     void Start()
     {
-        if (test == TestBehaviour.TestLockStep)
-            peers = FindObjectsOfType(typeof(TestLockStepBehaviour)) as TestLockStepBehaviour[];
-        else
-            peers = FindObjectsOfType(typeof(H2PLockStepBehaviour)) as H2PLockStepBehaviour[];
+        peers = new List<ITestInfos>();
+        peers.AddRange(FindObjectsOfType(typeof(TestLockStepBehaviour)) as TestLockStepBehaviour[]);
+        peers.AddRange(FindObjectsOfType(typeof(H2PLockStepBehaviour)) as H2PLockStepBehaviour[]);
     }
 
     void OnGUI()
@@ -51,6 +49,9 @@ public class TestGUI : MonoBehaviour
     }
 }
 
+/// <summary>
+/// Stores informations to be displayed on TestGUI
+/// </summary>
 public interface ITestInfos
 {
     int MyPlayerID { get; }

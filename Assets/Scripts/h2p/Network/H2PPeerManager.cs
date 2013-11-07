@@ -23,37 +23,46 @@ using System.Collections.Generic;
 using System.Net;
 using com.ficontent.gws.Peer2Peer.Packets;
 using com.ficontent.gws.Peer2Peer.Peers;
-/*  ----------------------------------------------------------------------------
- *  Disney Research Zurich
- *  ----------------------------------------------------------------------------
- *  SmartFoxServer 2x - p2p game Example
- *  ----------------------------------------------------------------------------
- *  File:       PeerManager.cs
- *  Author:     Mattia Ryffel
- *  ----------------------------------------------------------------------------
- */
 using UnityEngine;
 
+/// <summary>
+/// Sample Unity Host2Peer Manager implementation
+/// One peer becomes the host and controls the game simulation for the other peers
+/// </summary>
 public class H2PPeerManager : AbstractPeerManager
 {
-    public float snapSendDelay = .05f;      // delay for sending packets
-    private float snapNextSend;     // next send time
-
-    public bool traceNetActivity = false;
+    /// <summary>
+    /// delay for sending packets
+    /// </summary>
+    public float snapSendDelay = .05f;      
+    /// <summary>
+    /// next send time
+    /// </summary>
+    private float snapNextSend; 
 
     public override int myPlayerID
     {
         get;
         set;
     }
+
+    /// <summary>
+    /// Defines who is the host peer
+    /// </summary>
     public override bool isHost { get { return myPlayerID == 1; } }
 
     private IPacketSerializer packetSerializer = new BinaryFormatterPacketSerializer();
+    /// <summary>
+    /// Provides the serialization methods
+    /// </summary>
     public override IPacketSerializer PacketSerializer
     {
         get { return packetSerializer; }
     }
 
+    /// <summary>
+    /// Determines when to update the network
+    /// </summary>
     protected override bool UpdateTimeElapsed
     {
         get
@@ -68,7 +77,12 @@ public class H2PPeerManager : AbstractPeerManager
         }
     }
 
-    public H2PPeerManager(int myPID) 
+    /// <summary>
+    /// Initializes the peer
+    /// Creates the pid network addresses map using the other peers in the scene
+    /// </summary>
+    /// <param name="myPID">Peer's Player ID</param>
+    public H2PPeerManager(int myPID)
         : base(myPID)
     {
         PIDMap = new Dictionary<int, string>();
@@ -76,8 +90,8 @@ public class H2PPeerManager : AbstractPeerManager
 
         foreach (var p in peers)
         {
-            if (p.playerID != this.myPlayerID)
-                PIDMap.Add(p.playerID, "127.0.0.1");
+            if (p.myPID != this.myPlayerID)
+                PIDMap.Add(p.myPID, "127.0.0.1");
         }
     }
 
@@ -90,24 +104,5 @@ public class H2PPeerManager : AbstractPeerManager
     public override void OnQuit()
     {
         this.localPeer.OnApplicationQuit();
-    }
-
-    protected override int Send(IPEndPoint ip, IPacket packet)
-    {
-        int retBytes = base.Send(ip, packet);
-
-        if (traceNetActivity)
-            Debug.Log(string.Format("tx {0} bytes = {1} dest= {2}", packet, retBytes, ip));
-
-        return retBytes;
-    }
-
-    public override void DataReceivedCallBack(byte[] data, ref IPEndPoint sender)
-    {
-        var packet = packetSerializer.GetPacket(data);
-        Actions.PacketReceived(packet);
-
-        if (traceNetActivity)
-            Debug.Log(string.Format("rx {0} from {1}", packet, sender));
-    }
+    }  
 }

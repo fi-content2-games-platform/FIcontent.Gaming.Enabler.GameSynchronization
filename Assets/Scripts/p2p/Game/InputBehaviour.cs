@@ -22,9 +22,13 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Gets the player inputs.
+/// MouseClick button generates a DrawAction.
+/// </summary>
 public class InputBehaviour : MonoBehaviour
 {
-    LockStepBehaviour lockStep;
+    private LockStepBehaviour lockStep;
     
     void Start()
     {
@@ -33,9 +37,11 @@ public class InputBehaviour : MonoBehaviour
 
     void Update()
     {
+        //game simulation must be started
         if (!lockStep.SimStarted)
             return;
 
+        //get button 0 and creates a draw action at the screen location
         if (Input.GetMouseButton(0))
             GetPoint();
 
@@ -52,9 +58,5 @@ public class InputBehaviour : MonoBehaviour
             var action = new DrawPointAction(hit);
             lockStep.AddAction(action);
         }
-
-
-
-
     }
 }

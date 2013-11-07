@@ -25,105 +25,128 @@ using UnityEngine;
 using com.ficontent.gws.Peer2Peer.Packets.Actions;
 using com.ficontent.gws.Peer2Peer.Packets;
 
+/// <summary>
+/// This class shows hot to use the Peer2Peer Lockstep with Unity.
+/// The monobehaviour instantiates and calls the Simulation and Peer Manager methods from Start() and Update().
+/// 
+/// Uses H2PSimManager and H2PPeerManager classes to extend the lockstep model.
+/// At each simulation step the host peer sends around the object transform.
+/// 
+/// Implements ITestInfos to send debug information about the peer to the TestGUI behaviour.
+/// </summary>
 public class H2PLockStepBehaviour : MonoBehaviour, ITestInfos
 {
-    private H2PPeerManager peerMan; // = new H2PPeerManager();
+    private H2PPeerManager peerMan;
     private H2PSimManager simMan = new H2PSimManager();
 
+    /// <summary>
+    /// The Peer object to be moved around by the host
+    /// </summary>
     public GameObject prefab;
-    public int myPID;
-    public int playerID
-    {
-        get { return myPID; }
-    }
 
+    /// <summary>
+    /// Used to initialize the peers player ID
+    /// </summary>
+    public int myPID;
+       
     public int MyPlayerID
     {
         get { return peerMan.myPlayerID; }
     }
-    public Dictionary<int, string> pidMap
-    {
-        get { return peerMan.PIDMap; }
-        set { peerMan.PIDMap = value; }
-    }
-
     private string otherInfos = string.Empty;
     public string OtherInfos
     {
         get { return otherInfos; }
     }
+    public uint SimSnap
+    {
+        get { return simMan.SimSnap; }
+    }
 
+    /// <summary>
+    /// Instantiates and initializes the PeerManager and SimManager class.
+    /// Subscribes to the SimManager events
+    /// </summary>
     void Awake()
     {
         peerMan = new H2PPeerManager(myPID);
-        //peerMan.myPlayerID = myPID;
-        //peerMan.Awake();
-
+        
         simMan.CheckSumEvent += simMan_CheckSumEvent;
         simMan.SimulationStartEvent += simMan_SimStarted;
         simMan.SimulationStepEvent += simMan_SuccesfulSimulation;
         simMan.CheckSum = new TextCheckSum();
         simMan.PeerMan = peerMan;
 
+        //creates the gameobject for the example
+        //the peer clients will synchronize their object with the transform of the host object.
         var go = Instantiate(prefab) as GameObject;
         go.name = "test object " + (peerMan.isHost ? "host" : "client") + " " + myPID;
         simMan.objects.Add(go.transform);
     }
 
+    /// <summary>
+    /// Checksum Event
+    /// Called each time a checksum is calculated
+    /// </summary>
+    /// <param name="checksum">calculated checksum string</param>
+    /// <param name="simSnap">snapshot of the checksum</param>
     void simMan_CheckSumEvent(string checksum, uint simSnap)
     {
         simMan.map.Add(simSnap, checksum);
         peerMan.AddAction(simSnap, peerMan.myPlayerID, new CheckSumAction(checksum));
     }
 
+    /// <summary>
+    /// Simulation started event.
+    /// Called the first time a packet from each peer is received
+    /// </summary>
     void simMan_SimStarted()
     {
         Debug.Log("Started " + peerMan.myPlayerID);
     }
 
+    /// <summary>
+    /// Succesful Simulation Event
+    /// Called each time a simulation step is executed
+    /// </summary>
+    /// <param name="simSnap">simulation snapshot executed</param>
     void simMan_SuccesfulSimulation(uint simSnap)
     {
+        //sends the transforms
         SendPosition();
+
+        //updates the debug infos
         otherInfos = simMan.otherInfos;
     }
-
-
-
+    
+    /// <summary>
+    /// Start calls
+    /// </summary>
     void Start()
     {
         peerMan.Start();
     }
 
+    /// <summary>
+    /// Update calls
+    /// </summary>
     void Update()
     {
         peerMan.Update();
         simMan.Update();
     }
 
+    /// <summary>
+    /// Network finalization
+    /// </summary>
     void OnApplicationQuit()
     {
         peerMan.OnQuit();
     }
-
-    [ContextMenu("Trace network activity")]
-    void SwitchTraceNet()
-    {
-        this.peerMan.traceNetActivity = !this.peerMan.traceNetActivity;
-    }
-
-    public void AddAction(IAction action)
-    {
-        uint currentSnap = simMan.SimSnap + peerMan.SnapActionDelay;
-
-        peerMan.AddAction(currentSnap, MyPlayerID, action);
-    }
-
-
-    public uint SimSnap
-    {
-        get { return simMan.SimSnap; }
-    }
-
+    
+    /// <summary>
+    /// The host peer broadcasts the host object transform
+    /// </summary>
     private void SendPosition()
     {
         if (peerMan.isHost)

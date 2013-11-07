@@ -33,18 +33,7 @@ public class IPHelper
     { 
         get
         {
-            IPHostEntry host;
-            string localIP = string.Empty;
-            host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (IPAddress ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    localIP = ip.ToString();
-                    break;
-                }
-            }
-            return localIP;
+            return UnityEngine.Network.player.ipAddress;
         }
     }
 }

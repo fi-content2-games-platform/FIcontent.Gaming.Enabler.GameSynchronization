@@ -23,6 +23,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Draws a prefab at the selected location.
+/// Uses a queue to store the draw actions received from the network.
+/// </summary>
 public class DrawBehaviour : MonoBehaviour
 {
     private static Color[] playerColors = new Color[]
@@ -41,6 +45,8 @@ public class DrawBehaviour : MonoBehaviour
         {
             var action = toDraw.Dequeue() as DrawPointAction;
             var g = Instantiate(prefab, action.position, Quaternion.identity) as GameObject;
+
+            //The prefab is colored accordigly to the player who created it.
            g.GetComponentInChildren<Renderer>().material.color = playerColors[action.PID - 1];           
         }
     }

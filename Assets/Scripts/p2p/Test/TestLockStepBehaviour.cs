@@ -24,67 +24,61 @@ using com.ficontent.gws.Peer2Peer.CheckSum;
 using com.ficontent.gws.Peer2Peer.Packets.Actions;
 using UnityEngine;
 
+/// <summary>
+/// This class shows hot to use the Peer2Peer Lockstep with Unity.
+/// The monobehaviour instantiates and calls the Simulation and Peer Manager methods from Start() and Update().
+/// Uses SimManager and TestPeerManager classes to extend the lockstep model.
+/// </summary>
 public class TestLockStepBehaviour : MonoBehaviour, ITestInfos
 {
     private TestPeerManager peerMan;
     private SimManager simMan = new SimManager();
 
-    public static TestLockStepBehaviour instance;
-
+    /// <summary>
+    /// Used to initialize the peers player ID
+    /// </summary>
     public int myPID;
-    public int playerID
-    {
-        get { return myPID; }        
-    }
+
     public uint SimSnap { get { return simMan.SimSnap; } }
-
     public string OtherInfos { get { return string.Empty; } }
-
     public int MyPlayerID
     {
         get { return peerMan.myPlayerID; }
     }
-    public Dictionary<int, string> pidMap
-    {
-        get { return peerMan.PIDMap; }
-        set { peerMan.PIDMap = value; }
-    }
-
+    
+    /// <summary>
+    /// Instantiates and initializes the PeerManager and SimManager class.
+    /// Subscribes to the SimManager events
+    /// </summary>
     void Awake()
     {
-        peerMan =  new TestPeerManager(playerID);        
+        peerMan =  new TestPeerManager(myPID);      
         simMan.CheckSum = new TextCheckSum();
-        simMan.PeerMan = peerMan;
-
-        instance = this;
+        simMan.PeerMan = peerMan;                
     }
 
+    /// <summary>
+    /// Start calls
+    /// </summary>
     void Start()
     {
         peerMan.Start();
     }
 
+    /// <summary>
+    /// Update calls
+    /// </summary>
     void Update()
     {
         peerMan.Update();
         simMan.Update();
     }
 
+    /// <summary>
+    /// Network finalization
+    /// </summary>
     void OnApplicationQuit()
     {
         peerMan.OnQuit();
-    }
-
-    [ContextMenu("Trace network activity")]
-    void SwitchTraceNet()
-    {
-        peerMan.traceNetActivity = !peerMan.traceNetActivity;
-    }
-
-    public void AddAction(IAction action)
-    {
-        uint currentSnap = simMan.SimSnap + peerMan.SnapActionDelay;
-
-        peerMan.AddAction(currentSnap, MyPlayerID, action);
-    }
+    }     
 }

@@ -23,6 +23,10 @@ using System;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+/// <summary>
+/// Stores the information about a drawing point on the worldspace.
+/// This class shows how to extend the AbstractAction class which contains the base action information and serialization methods.
+/// </summary>
 [Serializable]
 public class DrawPointAction : com.ficontent.gws.Peer2Peer.Packets.Actions.AbstractAction
 {
@@ -48,6 +52,9 @@ public class DrawPointAction : com.ficontent.gws.Peer2Peer.Packets.Actions.Abstr
     }
 
 
+    /// <summary>
+    /// Deserialization constructor
+    /// </summary>    
     public DrawPointAction(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
@@ -56,6 +63,9 @@ public class DrawPointAction : com.ficontent.gws.Peer2Peer.Packets.Actions.Abstr
         this.z = info.GetSingle("z");
     }
 
+    /// <summary>
+    /// Serialization method
+    /// </summary> 
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         base.GetObjectData(info, context);

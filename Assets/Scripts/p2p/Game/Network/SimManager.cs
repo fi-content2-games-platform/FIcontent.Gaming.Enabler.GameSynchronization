@@ -26,19 +26,38 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Simulation manager
-/// Implements the lockstep simulation
+/// Implements the lockstep simulation by extending the AbstractSimManager class
 /// </summary>
 public class SimManager : AbstractSimManager
 {
-    public readonly float snapDelay = .1f;               // delay of the simulation snapshot
+    /// <summary>
+    /// delay of the simulation snapshot in ms
+    /// </summary>
+    public readonly float snapDelay = .1f;               
       
+    /// <summary>
+    /// next simulation snapshot time
+    /// </summary>
     private float nextSnap;
+
+    /// <summary>
+    /// interval of snapshots for checksum calculation
+    /// </summary>
     private readonly uint checkSumDelay = 10;    
     
+    /// <summary>
+    /// map of the local player checksums
+    /// </summary>
     public Dictionary<uint, string> map = new Dictionary<uint, string>();
+
+    /// <summary>
+    /// list of the game objects
+    /// </summary>
     public static List<Vector3> objects = new List<Vector3>();
 
-
+    /// <summary>
+    /// retrieves the string for the checksum calculation input
+    /// </summary>
     protected override object GetCheckSumParams()
     {
         System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -74,6 +93,10 @@ public class SimManager : AbstractSimManager
 
     #region Execute actions
 
+    /// <summary>
+    /// Executes the actions received from the network
+    /// It's called when a simulation step is executed, all the actions for each player for that snapshot are executed
+    /// </summary>
     protected override void ExecuteAction(IAction a)
     {
         switch (a.Action)

@@ -24,25 +24,21 @@ using com.ficontent.gws.Peer2Peer.CheckSum;
 using UnityEngine;
 using com.ficontent.gws.Peer2Peer.Packets.Actions;
 
+/// <summary>
+/// This class shows hot to use the Peer2Peer Lockstep with Unity.
+/// The monobehaviour instantiates and calls the Simulation and Peer Manager methods from Start() and Update().
+/// Uses SimManager and PeerManager classes to extend the lockstep model.
+/// </summary>
 public class LockStepBehaviour : MonoBehaviour
 {
     private PeerManager peerMan;
     private SimManager simMan = new SimManager();
-
-    public static LockStepBehaviour instance;
-
-    public int myPlayerID
-    {
-        get { return peerMan.myPlayerID; }
-    }
-    public Dictionary<int, string> pidMap
-    {
-        get { return peerMan.PIDMap; }
-        set { peerMan.PIDMap = value; }
-    }
-
+    
     public bool SimStarted { get { return simMan.SimStarted; } }
 
+    /// <summary>
+    /// Prints some debug infos about the peer
+    /// </summary>
     void OnGUI()
     {
         GUILayout.BeginVertical();
@@ -51,49 +47,75 @@ public class LockStepBehaviour : MonoBehaviour
         GUILayout.EndVertical();
     }
 
+    /// <summary>
+    /// Instantiates and initializes the PeerManager and SimManager class.
+    /// Subscribes to the SimManager events
+    /// </summary>
     void Awake()
     {
         peerMan = new PeerManager();
-        
+
         simMan.CheckSum = new TextCheckSum();
         simMan.PeerMan = peerMan;
         simMan.CheckSumEvent += simMan_CheckSumEvent;
-
-        instance = this;
     }
 
+    /// <summary>
+    /// Start calls
+    /// </summary>
     void Start()
     {
         peerMan.Start();
     }
 
+    /// <summary>
+    /// Update calls
+    /// </summary>
     void Update()
     {
         peerMan.Update();
         simMan.Update();
     }
 
+    /// <summary>
+    /// Network finalization
+    /// </summary>
     void OnApplicationQuit()
     {
         peerMan.OnQuit();
     }
 
+    /// <summary>
+    /// Enables showing the network traffic logs in the console
+    /// </summary>
     [ContextMenu("Trace network activity")]
     void SwitchTraceNet()
     {
         this.peerMan.traceNetActivity = !this.peerMan.traceNetActivity;
     }
 
+    /// <summary>
+    /// Adds an action to the snapshot action queue
+    /// </summary>
+    /// <param name="action">action to be added</param>
     public void AddAction(IAction action)
     {
-        uint currentSnap = simMan.SimSnap + peerMan.SnapActionDelay;
-
-        peerMan.AddAction(currentSnap, myPlayerID, action);
+        peerMan.AddAction(simMan.SimSnap, peerMan.myPlayerID, action);
     }
 
+    /// <summary>
+    /// Checksum Event
+    /// Called each time a checksum is calculated
+    /// </summary>
+    /// <param name="checksum">calculated checksum string</param>
+    /// <param name="simSnap">snapshot of the checksum</param>
     void simMan_CheckSumEvent(string checksum, uint simSnap)
     {
-       simMan.map.Add(simSnap, checksum);
+        //adds the checksum to the player checksum dictionary
+        simMan.map.Add(simSnap, checksum);
+
+        //broadcasts a checksum action
+        //the other peers will check with their respective checksum for this snapshot when receiving this packet
         peerMan.AddAction(simSnap, peerMan.myPlayerID, new CheckSumAction(checksum));
     }
 }

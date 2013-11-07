@@ -24,6 +24,10 @@ using System.Runtime.Serialization;
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// Stores a list of transforms and provides methods for serialization.
+/// This class shows how to extend the AbstractAction class which contains the base action information and serialization methods.
+/// </summary>
 [Serializable]
 public class TransformsAction : com.ficontent.gws.Peer2Peer.Packets.Actions.AbstractAction
 {
@@ -36,6 +40,9 @@ public class TransformsAction : com.ficontent.gws.Peer2Peer.Packets.Actions.Abst
     }
 
 
+    /// <summary>
+    /// Deserialization
+    /// </summary>        
     public TransformsAction(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
@@ -47,7 +54,12 @@ public class TransformsAction : com.ficontent.gws.Peer2Peer.Packets.Actions.Abst
         this.t.Add(new Transform(transform));
     }
 
-
+    /// <summary>
+    /// Serialization
+    /// </summary>    
+    /// <remarks>
+    /// On iOS generic collections must be replaced by arrays for serialization due to the aot compiler limitations.
+    /// </remarks>
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         base.GetObjectData(info, context);
@@ -55,6 +67,9 @@ public class TransformsAction : com.ficontent.gws.Peer2Peer.Packets.Actions.Abst
         info.AddValue("transforms", t);
     }
 
+    /// <summary>
+    /// Provides a serializable Transform class
+    /// </summary>
     [Serializable]
     public class Transform : ISerializable
     {
@@ -100,6 +115,9 @@ public class TransformsAction : com.ficontent.gws.Peer2Peer.Packets.Actions.Abst
     }
 }
 
+/// <summary>
+/// Extends the Transform class methods
+/// </summary>
 public static class TransformExtensions
 {
     public static void SetTransform(this UnityEngine.Transform trans, TransformsAction.Transform t)

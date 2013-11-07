@@ -19,6 +19,9 @@
  * THE SOFTWARE.
  */
 
+/// <summary>
+/// Extends the ActionTypes to be used to enumerate the packet actions
+/// </summary>
 public class ActionType : com.ficontent.gws.Peer2Peer.Packets.Actions.ActionType
 {
     public const int DRAW = 1;

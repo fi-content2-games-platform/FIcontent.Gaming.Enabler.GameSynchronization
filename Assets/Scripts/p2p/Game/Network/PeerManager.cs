@@ -23,32 +23,47 @@ using System.Collections.Generic;
 using System.Net;
 using com.ficontent.gws.Peer2Peer.Packets;
 using com.ficontent.gws.Peer2Peer.Peers;
-/*  ----------------------------------------------------------------------------
- *  Disney Research Zurich
- *  ----------------------------------------------------------------------------
- *  SmartFoxServer 2x - p2p game Example
- *  ----------------------------------------------------------------------------
- *  File:       PeerManager.cs
- *  Author:     Mattia Ryffel
- *  ----------------------------------------------------------------------------
- */
 using UnityEngine;
 
+/// <summary>
+/// Sample Unity Peer2Peer Manager implementation
+/// This sample uses the unity editor and the unity deployed version as peers
+/// </summary>
 public class PeerManager : AbstractPeerManager
 {
-    public float snapSendDelay = .05f;      // delay for sending packets
-    private float snapNextSend;     // next send time
+    /// <summary>
+    /// delay for sending packets
+    /// </summary>
+    public float snapSendDelay = .05f;
+    /// <summary>
+    /// next send time
+    /// </summary>
+    private float snapNextSend;
+
+    /// <summary>
+    /// if true prints the network activity to the unity console
+    /// </summary>
     public bool traceNetActivity = false;
 
     public override int myPlayerID { get; set; }
+
+    /// <summary>
+    /// Every peer is equal
+    /// </summary>
     public override bool isHost { get { return false; } }
 
     private IPacketSerializer packetSerializer = new BinaryFormatterPacketSerializer();
+    /// <summary>
+    /// Provides the serialization methods
+    /// </summary>
     public override IPacketSerializer PacketSerializer
     {
         get { return packetSerializer; }
     }
 
+    /// <summary>
+    /// Determines when to update the network
+    /// </summary>
     protected override bool UpdateTimeElapsed
     {
         get
@@ -63,6 +78,11 @@ public class PeerManager : AbstractPeerManager
         }
     }
 
+    /// <summary>
+    /// Initializes the peer
+    /// Hardcoded peer map initialization. In a real use scenario this would be replaced by a list of peers addresses
+    /// </summary>
+    /// <param name="myPID">Peer's Player ID</param>
     public PeerManager()
         : base(-1)
     {
@@ -76,7 +96,7 @@ public class PeerManager : AbstractPeerManager
         PIDMap.Add(1, "127.0.0.1");
 #endif
     }
-        
+
     public override void Start()
     {
         base.Start();
@@ -87,6 +107,9 @@ public class PeerManager : AbstractPeerManager
         this.localPeer.OnApplicationQuit();
     }
 
+    /// <summary>
+    /// Overrides the Send method just to add the UnityEngine.Debug.Log() command
+    /// </summary>  
     protected override int Send(IPEndPoint ip, IPacket packet)
     {
         int retBytes = base.Send(ip, packet);
@@ -97,6 +120,9 @@ public class PeerManager : AbstractPeerManager
         return retBytes;
     }
 
+    /// <summary>
+    /// Overrides the DataReceivedCallBack method just to add the UnityEngine.Debug.Log() command
+    /// </summary>
     public override void DataReceivedCallBack(byte[] data, ref IPEndPoint sender)
     {
         var packet = packetSerializer.GetPacket(data);
