@@ -1,6 +1,6 @@
-FIcontent.Gaming.Enabler.GameSynchronization
+Game Synchronization
 ============================================
-This repository will contain the following Reality Mixer SEs of the FIcontent Pervasive Games Platform:
+This repository will contain the following SEs of the FIcontent Pervasive Games Platform:
   * Game Synchronization SE 
   
 For documentation please refer to the FIcontent Wiki at http://wiki.ficontent.eu/ in particular
