@@ -5,7 +5,7 @@ This repository will contain the following SEs of the FIcontent Pervasive Games 
   
 For documentation about this SE, please have a look at http://wiki.mediafi.org/doku.php/ficontent:gaming:enabler:gamesynchronization:start
 
-For documentation about FIcontent in general, please refer to the Wiki at http://wiki.mediafi.eu/ in particular
+For documentation about FIcontent in general, please refer to the Wiki at http://wiki.mediafi.org/ in particular
 the documentation of the Pervasive Games Platform at http://wiki.mediafi.org/doku.php/ficontent:gaming:architecture
 
 Contact
