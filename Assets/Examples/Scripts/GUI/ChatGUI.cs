@@ -62,8 +62,6 @@ public class ChatGUI : HideableCanvas
         }
 
         chatInputField.text = string.Empty;
-        chatInputField.Select();
-        chatInputField.ActivateInputField();
     }
 }
 
