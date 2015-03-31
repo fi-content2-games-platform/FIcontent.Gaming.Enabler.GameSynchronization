@@ -18,7 +18,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using UnityEngine;
 using System.Collections;
 using FIcontent.Gaming.Enabler.GameSynchronization;
@@ -29,6 +28,9 @@ using FIcontent.Gaming.Enabler.GameSynchronization.Packets.Actions;
 /// Chat messages are added as separate RPC calls.
 /// The ExecuteAction override implements the execution of the actions for the current simulation turn.
 /// </summary>
+using System.Collections.Generic;
+
+
 public class SampleLockstepPeer : LockstepPeer
 {
 
@@ -43,6 +45,9 @@ public class SampleLockstepPeer : LockstepPeer
             return instance;
         }
     }
+
+    public GameObject playerObjectPrefab;
+    private Dictionary<string, PlayerObject> playerObjects;
 
     /// <summary>
     /// Extra RPC to send the chat messages.
@@ -60,30 +65,54 @@ public class SampleLockstepPeer : LockstepPeer
         FindObjectOfType<ChatGUI>().AppendMessage(msg);
     }
 
+    #region Lockstep overrides
+
     protected override void ExecuteAction(FIcontent.Gaming.Enabler.GameSynchronization.Packets.Actions.IAction a)
     {
         switch (a.Action)
         {
+            case CreateObjectAction.ActionType:
+                var go = Instantiate(playerObjectPrefab) as GameObject;
+                go.GetComponent<PlayerObject>().owner = a.GUID;
+                playerObjects.Add(a.GUID, go.GetComponent<PlayerObject>());
+                break;
+
             case PositionAction.ActionType:
-                PositionAction posAction = a as PositionAction;
-                Debug.Log("Received position from " + posAction.GUID);
+                var posAction = a as PositionAction;
+                playerObjects [a.GUID].Move(posAction.position);
                 break;
         }
     }
 
+    protected override void OnSimulationStarted()
+    {
+        playerObjects = new Dictionary<string, PlayerObject>();
+
+        AddAction(new CreateObjectAction(this.GUID));
+    }
 
     protected override void Update()
     {
         base.Update();
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            PositionAction p = new PositionAction(Vector3.zero);
-            p.GUID = this.GUID;
+        Vector3 movement = Vector3.zero;
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+            movement = Vector3.up;
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+            movement = Vector3.down;
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            movement = Vector3.left;
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+            movement = Vector3.right;
 
-            AddAction(p);
+        if (movement != Vector3.zero)
+        {
+            var posAction = new PositionAction(movement, this.GUID);
+            AddAction(posAction);
         }
     }
+
+    #endregion
 
 
 }

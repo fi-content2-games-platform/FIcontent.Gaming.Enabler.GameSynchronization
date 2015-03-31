@@ -83,6 +83,8 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
             simulationStarted = true;
             
             RepeatSend(true);
+
+            OnSimulationStarted();
         }
 
         /// <summary>
@@ -115,6 +117,11 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
         /// </summary>
         /// <param name="action">Action to be executed</param>
         protected abstract void ExecuteAction(IAction action);
+
+        /// <summary>
+        /// Event raised when the simulation is started.
+        /// </summary>
+        protected abstract void OnSimulationStarted();
 
         /// <summary>
         /// Adds an action to the queue of actions to send

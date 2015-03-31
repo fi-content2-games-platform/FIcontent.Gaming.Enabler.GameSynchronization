@@ -25,32 +25,16 @@ using System.Runtime.Serialization;
 
 /// <summary>
 /// Sample implementation of an Action.
-/// The AbstractAction class is extended to send a Vector3.
+/// The AbstractAction class is extended to send an instruction to create an object.
 /// </summary>
 [System.Serializable]
-public class PositionAction : AbstractAction
+public class CreateObjectAction : AbstractAction
 {
-    public const int ActionType = 3;
-
-    private float x;
-    private float y;
-    private float z;
+    public const int ActionType = 4;
     
-    public Vector3 position
-    {
-        get { return new Vector3(x, y, z); }
-        set
-        {
-            x = value.x;
-            y = value.y;
-            z = value.z;
-        }
-    }
-    
-    public PositionAction(Vector3 point, string guid)
+    public CreateObjectAction(string guid)
         : base(ActionType)
     {
-        this.position = point;
         base.GUID = guid;
     }
     
@@ -58,12 +42,10 @@ public class PositionAction : AbstractAction
     /// <summary>
     /// Deserialization constructor
     /// </summary>    
-    public PositionAction(SerializationInfo info, StreamingContext context)
+    public CreateObjectAction(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        this.x = info.GetSingle("x");
-        this.y = info.GetSingle("y");
-        this.z = info.GetSingle("z");
+       
     }
     
     /// <summary>
@@ -72,11 +54,7 @@ public class PositionAction : AbstractAction
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         base.GetObjectData(info, context);
-        
-        info.AddValue("x", x);
-        info.AddValue("y", y);
-        info.AddValue("z", z);
     }
-
+    
 }
 
