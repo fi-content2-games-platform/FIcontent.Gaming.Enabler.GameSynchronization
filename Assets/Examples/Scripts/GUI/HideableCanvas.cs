@@ -26,7 +26,7 @@ using System.Collections;
 /// Component that allows to Hide the GUI Canvas
 /// </summary>
 [RequireComponent(typeof(CanvasGroup))]
-public class HideableGUI : MonoBehaviour
+public class HideableCanvas : MonoBehaviour
 {
     public void Show(bool show)
     {

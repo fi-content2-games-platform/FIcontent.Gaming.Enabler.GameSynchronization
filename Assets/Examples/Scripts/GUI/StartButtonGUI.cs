@@ -25,7 +25,7 @@ using System.Collections;
 /// <summary>
 /// GUI Button to start the simulation from the server Player
 /// </summary>
-public class StartButtonGUI : HideableGUI {
+public class StartButtonGUI : HideableCanvas {
 
     private Button button;
 

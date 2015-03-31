@@ -26,7 +26,7 @@ using FIcontent.Gaming.Enabler.GameSynchronization;
 /// <summary>
 /// GUI Component to manage the server creation / connection
 /// </summary>
-public class ManageServerPanelGUI : HideableGUI
+public class ManageServerPanelGUI : HideableCanvas
 {
 
     public RectTransform serverListPanel;

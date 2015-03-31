@@ -826,9 +826,7 @@ MonoBehaviour:
   snapSendInterval: .100000001
   portNumber: 16667
   maxConnections: 8
-  connectionTimeout: 2
   snapActionDelay: 2
-  ipAddress: localhost
 --- !u!4 &666272059
 Transform:
   m_ObjectHideFlags: 0
@@ -1852,7 +1850,7 @@ GameObject:
   - 114: {fileID: 1652709968}
   - 148: {fileID: 1652709969}
   m_Layer: 0
-  m_Name: peer1
+  m_Name: LockstepPeer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

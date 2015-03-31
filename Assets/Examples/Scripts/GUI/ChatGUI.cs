@@ -28,7 +28,7 @@ using FIcontent.Gaming.Enabler.GameSynchronization;
 /// Chat GUI Component
 /// The chat messages are sent by SampleLockstepPeer via RPC
 /// </summary>
-public class ChatGUI : HideableGUI
+public class ChatGUI : HideableCanvas
 {
     public Text chatText;
     public InputField chatInputField;
