@@ -25,35 +25,41 @@ using FIcontent.Gaming.Enabler.GameSynchronization.Packets.Actions;
 
 namespace FIcontent.Gaming.Enabler.GameSynchronization
 {
+    /// <summary>
+    /// Abstract class for the Lockstep mechanism
+    /// Defines the methods to send the packets and advance the simulation turns
+    /// </summary>
     [RequireComponent(typeof(NetworkView))]
     public abstract class LockstepPeer : MonoBehaviour
     {
+        /// <summary>
+        /// The current simulation snap.
+        /// If the actions from all the players are received for this snap, they are executed and the simulation advance to the next snap.
+        /// </summary>
         public uint simulationSnap;
+        /// <summary>
+        /// Counter of the last action sent
+        /// </summary>
         public uint commandSnap;
         private bool simulationStarted;
 
         public bool SimulationStarted
         { get { return simulationStarted; } }
 
+        /// <summary>
+        /// Dictionary containing the actions for every snap from all the players.
+        /// The content of this dictionary can reproduce the simulation as a demo.
+        /// </summary>
         private SnapActions actions;
         private IPacketSerializer packetSerializer = new BinaryFormatterPacketSerializer();
         protected new NetworkView networkView;
         private int playerCount;
-
-        public void RepeatSend(bool start)
-        {
-            if (start)
-                InvokeRepeating("SendSnap", 0f, LockstepSettings.Instance.snapSendInterval);
-            else
-                CancelInvoke("SendSnap");
-        }
 
         public string GUID
         {
             get
             {
                 return Network.player.ToString();
-
             }
         }
 
@@ -62,6 +68,27 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
             this.networkView = GetComponent<NetworkView>();
         }
 
+        #region Lockstep mechanism 
+
+        /// <summary>
+        /// Initializes the Lockstep
+        /// </summary>
+        private void InitializeLockstep()
+        {
+            simulationSnap = 0;
+            commandSnap = 0;
+            
+            this.actions = new SnapActions(playerCount);
+            
+            simulationStarted = true;
+            
+            RepeatSend(true);
+        }
+
+        /// <summary>
+        /// Lockstep mechanism:
+        /// When the actions for the current snap are received from all the players they are executed and the simulation can proceed to the next step.
+        /// </summary>
         protected virtual void Update()
         {
             if (simulationStarted)
@@ -83,13 +110,38 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
             } // simulationStarted
         }
 
+        /// <summary>
+        /// Executes the actions from that specific turn
+        /// </summary>
+        /// <param name="action">Action to be executed</param>
         protected abstract void ExecuteAction(IAction action);
+
+        /// <summary>
+        /// Adds an action to the queue of actions to send
+        /// </summary>
+        /// <param name="action">Action.</param>
+        public void AddAction(IAction action)
+        {
+            if (simulationStarted)
+                this.actions.CreateAction(simulationSnap + LockstepSettings.Instance.snapActionDelay, this.GUID, action);
+        }
+
+        #endregion
     
+        #region Connection
+
+        /// <summary>
+        /// The peer acting as a server counts the connected players to initialize the lockstep
+        /// </summary>
+        /// <param name="player">Player.</param>
         void OnPlayerConnected(NetworkPlayer player)
         {
             playerCount++;
         }
 
+        /// <summary>
+        /// Unity does not allow p2p networking, so one of the peers must act as a server
+        /// </summary>
         public void CreateServer()
         {
             playerCount = 1;
@@ -105,32 +157,19 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
                     useNat);
 
         }
-
         public void ConnectToServer(HostData hostData)
         {
             Network.Connect(hostData);
         }
  
-        void InitializeLockstep()
-        {
-            simulationSnap = 0;
-            commandSnap = 0;
-
-            this.actions = new SnapActions(playerCount);
-
-            simulationStarted = true;
-
-            RepeatSend(true);
-        }
-
-        public void AddAction(IAction action)
-        {
-            if (simulationStarted)
-                this.actions.CreateAction(simulationSnap + LockstepSettings.Instance.snapActionDelay, this.GUID, action);
-        }
+        #endregion
+       
+        #region Send Snap RPC
 
         /// <summary>
-        /// Sends the actions for the current snapshot
+        /// Sends the actions for the current snapshot.
+        /// If there are no current actions an empty packet is added to ensure that every player still gets a message for every snap.
+        /// Since Unity networking RPC calls are reliable there is no need to take track of the last received packets from the other players.
         /// </summary>
         public void SendSnap()
         {
@@ -147,23 +186,41 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
         }
 
         [RPC]
-        void ReceivePacket(byte[] packet)
+        private void ReceivePacket(byte[] packet)
         {
             this.actions.PacketReceived(this.packetSerializer.Deserialize(packet));
         }
 
+        private void RepeatSend(bool start)
+        {
+            if (start)
+                InvokeRepeating("SendSnap", 0f, LockstepSettings.Instance.snapSendInterval);
+            else
+                CancelInvoke("SendSnap");
+        }
+
+        #endregion
+
+        #region Start Simulation RPC
+
+        /// <summary>
+        /// The server sends this message when starting the simulation.
+        /// Everyone gets the number of players to initialize their lockstep mechanism and the simulation starts.
+        /// </summary>
         public void StartSimulation()
         {
             this.networkView.RPC("ReceiveStartSimulation", RPCMode.AllBuffered, playerCount);
         }
 
         [RPC]
-        void ReceiveStartSimulation(int playerCount)
+        private void ReceiveStartSimulation(int playerCount)
         {
             this.playerCount = playerCount;
 
             InitializeLockstep();
         }
+
+        #endregion
 
     }
 }

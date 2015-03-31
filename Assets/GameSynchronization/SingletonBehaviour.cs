@@ -21,6 +21,11 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Singleton implementation for MonoBehaviours
+/// The object instance is first searched in the scene, created if not found and finally returned.
+/// If multiple instances are found an exception is raised.
+/// </summary>
 namespace FIcontent.Gaming.Enabler.GameSynchronization
 {
     public class SingletonBehaviour<T> : MonoBehaviour  

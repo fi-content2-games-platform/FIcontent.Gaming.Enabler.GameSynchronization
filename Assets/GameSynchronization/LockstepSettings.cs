@@ -23,15 +23,23 @@ using System.Collections;
 
 namespace FIcontent.Gaming.Enabler.GameSynchronization
 {
+    /// <summary>
+    /// General settings for the Lockstep mechanism
+    /// </summary>
     public class LockstepSettings : SingletonBehaviour<LockstepSettings>
     {
-        public float snapSendInterval = 2f;
+        /// <summary>
+        /// Defines how frequently the actions are sent through the network
+        /// </summary>
+        public float snapSendInterval = 0.1f;
         public int portNumber = 1337;
         public int maxConnections = 8;
-        public float connectionTimeout = 2f;
-        public uint snapActionDelay = 2;
-        public string ipAddress = "localhost";
 
+        /// <summary>
+        /// The delay (in simulation snap time) of when the new actions are pushed in the queue
+        /// An action issued at snap time n will be executed at snap time n + snapActionDelay
+        /// </summary>
+        public uint snapActionDelay = 2;
     }
 }
 

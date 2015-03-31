@@ -23,6 +23,10 @@ using System.Collections;
 using FIcontent.Gaming.Enabler.GameSynchronization.Packets.Actions;
 using System.Runtime.Serialization;
 
+/// <summary>
+/// Sample implementation of an Action.
+/// The AbstractAction class is extended to send a Vector3.
+/// </summary>
 [System.Serializable]
 public class PositionAction : AbstractAction
 {
