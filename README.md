@@ -2,6 +2,8 @@ Game Synchronization
 ============================================
 This repository will contain the following SEs of the FIcontent Pervasive Games Platform:
   * Game Synchronization SE 
+
+This SE has been developed with Unity5. But can be easily converted to use older releases.
   
 For documentation about this SE, please have a look at http://wiki.mediafi.org/doku.php/ficontent:gaming:enabler:gamesynchronization:start
 
