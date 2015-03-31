@@ -22,6 +22,10 @@ using UnityEngine;
 using System.Collections;
 using FIcontent.Gaming.Enabler.GameSynchronization;
 
+/// <summary>
+/// Server button for the server list.
+/// Contains the hostData to connect to the server
+/// </summary>
 public class ServerButton : MonoBehaviour {
 
     public HostData hostData;

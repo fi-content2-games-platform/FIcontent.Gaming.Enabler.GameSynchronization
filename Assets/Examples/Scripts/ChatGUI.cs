@@ -23,13 +23,17 @@ using UnityEngine.UI;
 using System.Collections;
 using FIcontent.Gaming.Enabler.GameSynchronization;
 
+
+/// <summary>
+/// Chat GUI Component
+/// The chat messages are sent by SampleLockstepPeer via RPC
+/// </summary>
 public class ChatGUI : HideableGUI
 {
     public Text chatText;
     public InputField chatInputField;
     public Scrollbar scrollBar;
 
-    // Use this for initialization
     void Start()
     {
         chatInputField.onEndEdit.AddListener(SubmitChatMessage);
@@ -56,6 +60,7 @@ public class ChatGUI : HideableGUI
             SampleLockstepPeer.Instance.SendChatMessage(message);
             AppendMessage(message);
         }
+
         chatInputField.text = string.Empty;
         chatInputField.Select();
         chatInputField.ActivateInputField();

@@ -44,6 +44,11 @@ public class SampleLockstepPeer : LockstepPeer
         }
     }
 
+    /// <summary>
+    /// Extra RPC to send the chat messages.
+    /// This is out of scope of the Lockstep mechanism, and can run also when the simulation is not started, so a normal RPC can be used instead.
+    /// </summary>
+    /// <param name="msg">Message.</param>
     public void SendChatMessage(string msg)
     {
         this.networkView.RPC("ReceiveChatMessage", RPCMode.Others, msg);

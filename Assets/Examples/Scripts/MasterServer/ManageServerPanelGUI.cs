@@ -23,7 +23,10 @@ using System.Collections;
 using UnityEngine.UI;
 using FIcontent.Gaming.Enabler.GameSynchronization;
 
-public class ManageServerPanelGUI :HideableGUI
+/// <summary>
+/// GUI Component to manage the server creation / connection
+/// </summary>
+public class ManageServerPanelGUI : HideableGUI
 {
 
     public RectTransform serverListPanel;

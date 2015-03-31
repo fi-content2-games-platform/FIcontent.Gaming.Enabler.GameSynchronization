@@ -22,6 +22,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+/// <summary>
+/// GUI Button to start the simulation from the server Player
+/// </summary>
 public class StartButtonGUI : HideableGUI {
 
     private Button button;

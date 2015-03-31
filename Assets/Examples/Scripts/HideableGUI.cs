@@ -22,6 +22,9 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Component that allows to Hide the GUI Canvas
+/// </summary>
 [RequireComponent(typeof(CanvasGroup))]
 public class HideableGUI : MonoBehaviour
 {
