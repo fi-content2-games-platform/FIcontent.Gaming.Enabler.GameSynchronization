@@ -5,5 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/game_h2p.unity
+  - enabled: 0
+    path: Assets/Examples/Scenes/test.unity
+  - enabled: 1
+    path: Assets/Examples/Scenes/MasterServer.unity
