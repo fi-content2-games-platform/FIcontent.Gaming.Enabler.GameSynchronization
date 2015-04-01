@@ -30,7 +30,7 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
     /// Defines the methods to send the packets and advance the simulation turns
     /// </summary>
     [RequireComponent(typeof(NetworkView))]
-    public abstract class LockstepPeer : MonoBehaviour
+    public abstract class AbstractLockstepPeer : MonoBehaviour
     {
         /// <summary>
         /// The current simulation snap.

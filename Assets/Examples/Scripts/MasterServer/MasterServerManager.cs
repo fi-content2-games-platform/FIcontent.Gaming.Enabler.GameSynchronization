@@ -49,7 +49,7 @@ public class MasterServerManager : MonoBehaviour
     /// </summary>
     public void PublishServer()
     {
-        FindObjectOfType<LockstepPeer>().CreateServer();
+        FindObjectOfType<AbstractLockstepPeer>().CreateServer();
     }
 
 

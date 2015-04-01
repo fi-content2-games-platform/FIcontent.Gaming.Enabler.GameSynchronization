@@ -33,6 +33,6 @@ public class ServerButton : MonoBehaviour {
     public void Connect()
     {
         Debug.Log(hostData);
-        FindObjectOfType<LockstepPeer>().ConnectToServer(this.hostData);
+        FindObjectOfType<AbstractLockstepPeer>().ConnectToServer(this.hostData);
     }
 }

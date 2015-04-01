@@ -31,7 +31,7 @@ using FIcontent.Gaming.Enabler.GameSynchronization.Packets.Actions;
 using System.Collections.Generic;
 
 
-public class SampleLockstepPeer : LockstepPeer
+public class SampleLockstepPeer : AbstractLockstepPeer
 {
 
     private static SampleLockstepPeer instance;
