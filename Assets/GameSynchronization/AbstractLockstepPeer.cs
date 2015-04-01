@@ -178,7 +178,7 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
         /// If there are no current actions an empty packet is added to ensure that every player still gets a message for every snap.
         /// Since Unity networking RPC calls are reliable there is no need to take track of the last received packets from the other players.
         /// </summary>
-        public void SendSnap()
+        private void SendSnap()
         {
             // add an empty action in case there isn't any
             this.actions.CreateAction(simulationSnap, this.GUID, null);
