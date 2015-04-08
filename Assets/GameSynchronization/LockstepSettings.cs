@@ -26,7 +26,7 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
     /// <summary>
     /// General settings for the Lockstep mechanism
     /// </summary>
-    public class LockstepSettings : SingletonBehaviour<LockstepSettings>
+    public class LockstepSettings : MonoBehaviour
     {
         /// <summary>
         /// Defines how frequently the actions are sent through the network

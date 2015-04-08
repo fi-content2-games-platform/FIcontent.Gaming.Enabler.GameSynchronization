@@ -30,6 +30,7 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
     /// Defines the methods to send the packets and advance the simulation turns
     /// </summary>
     [RequireComponent(typeof(NetworkView))]
+    [RequireComponent(typeof(LockstepSettings))]
     public abstract class AbstractLockstepPeer : MonoBehaviour
     {
         /// <summary>
@@ -42,6 +43,8 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
         /// </summary>
         public uint commandSnap;
         private bool simulationStarted;
+
+        private LockstepSettings lockstepSettings;
 
         public bool SimulationStarted
         { get { return simulationStarted; } }
@@ -65,6 +68,7 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
 
         void Start()
         {
+            this.lockstepSettings = GetComponent<LockstepSettings>();
             this.networkView = GetComponent<NetworkView>();
         }
 
@@ -130,7 +134,7 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
         public void AddAction(IAction action)
         {
             if (simulationStarted)
-                this.actions.CreateAction(simulationSnap + LockstepSettings.Instance.snapActionDelay, this.GUID, action);
+                this.actions.CreateAction(simulationSnap + this.lockstepSettings.snapActionDelay, this.GUID, action);
         }
 
         #endregion
@@ -146,6 +150,10 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
             playerCount++;
         }
 
+        void OnPlayerDisconnected(NetworkPlayer player) {
+            Network.RemoveRPCs(player);
+        }
+
         /// <summary>
         /// Unity does not allow p2p networking, so one of the peers must act as a server
         /// </summary>
@@ -159,8 +167,8 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
 #endif
 
             Network.InitializeServer(
-                    LockstepSettings.Instance.maxConnections, 
-                    LockstepSettings.Instance.portNumber, 
+                this.lockstepSettings.maxConnections, 
+                this.lockstepSettings.portNumber, 
                     useNat);
 
         }
@@ -201,7 +209,7 @@ namespace FIcontent.Gaming.Enabler.GameSynchronization
         private void RepeatSend(bool start)
         {
             if (start)
-                InvokeRepeating("SendSnap", 0f, LockstepSettings.Instance.snapSendInterval);
+                InvokeRepeating("SendSnap", 0f, this.lockstepSettings.snapSendInterval);
             else
                 CancelInvoke("SendSnap");
         }
