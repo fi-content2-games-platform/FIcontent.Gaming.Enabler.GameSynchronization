@@ -59,6 +59,7 @@ public class ManageServerPanelGUI : HideableCanvas
         var newButton = Instantiate(serverButtonPrefab) as GameObject;
         newButton.GetComponentInChildren<Text>().text = hostData.gameName;
         newButton.GetComponent<RectTransform>().SetParent(serverListPanel);
+        newButton.transform.localScale = Vector3.one;
         newButton.GetComponent<ServerButton>().hostData = hostData;
     }
 }
