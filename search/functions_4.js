@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['getactions',['GetActions',['../class_f_icontent_1_1_gaming_1_1_enabler_1_1_game_synchronization_1_1_packets_1_1_snap_actions.html#a33fd2746b21a4bb1256a8b9898fc8616',1,'FIcontent.Gaming.Enabler.GameSynchronization.Packets.SnapActions.GetActions(uint snap, string guid)'],['../class_f_icontent_1_1_gaming_1_1_enabler_1_1_game_synchronization_1_1_packets_1_1_snap_actions.html#ac8c3853f2348f4b92cbe1a9d493db846',1,'FIcontent.Gaming.Enabler.GameSynchronization.Packets.SnapActions.GetActions(uint snap)']]],
+  ['getobjectdata',['GetObjectData',['../class_f_icontent_1_1_gaming_1_1_enabler_1_1_game_synchronization_1_1_packets_1_1_actions_1_1_abstract_action.html#a78639d0ddb63c1fba3655089fd2fca63',1,'FIcontent.Gaming.Enabler.GameSynchronization.Packets.Actions.AbstractAction.GetObjectData()'],['../class_f_icontent_1_1_gaming_1_1_enabler_1_1_game_synchronization_1_1_packets_1_1_packet.html#a51e4ff812a612d434ba606dcc14ec8a7',1,'FIcontent.Gaming.Enabler.GameSynchronization.Packets.Packet.GetObjectData()']]]
+];
