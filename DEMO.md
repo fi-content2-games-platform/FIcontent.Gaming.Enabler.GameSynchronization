@@ -14,7 +14,7 @@ Clone this repository with the following command
 ### Import to Unity
 Open the example scene:
 
-FIcontent.Gaming.Enabler.GameSynchronization/Assets/GameSynchronization/Examples/Scenes/MasterServer.unity
+*FIcontent.Gaming.Enabler.GameSynchronization/Assets/GameSynchronization/Examples/Scenes/MasterServer.unity*
 
 Hit play and enjoy!
 
