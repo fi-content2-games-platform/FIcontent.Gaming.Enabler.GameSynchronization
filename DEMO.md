@@ -9,5 +9,5 @@ Follow this link to get the latest version of Unity
 ## Clone the repository
 Clone this repository with the following command
 
-git clone https://github.com/fi-content2-games-platform/FIcontent.Gaming.Enabler.GameSynchronization.git
+*git clone https://github.com/fi-content2-games-platform/FIcontent.Gaming.Enabler.GameSynchronization.git*
 
